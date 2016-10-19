@@ -114,7 +114,7 @@ public class GoogleDriveFileSyncManagerTest {
 		when(request.execute()).thenThrow(new IOException());
 
 		fileSyncManager.getFileId("test");
-		
+
 		assertEquals("An error occurred: java.io.IOException", outContent.toString().trim());
 	}
 
@@ -167,6 +167,61 @@ public class GoogleDriveFileSyncManagerTest {
 		assertEquals("File ID: test", outContent.toString().trim());
 	}
 
+	@Test(expected = IOException.class)
+	public void testUpdateFileWithIOException() throws IOException {
+		java.io.File localFile = new java.io.File("C://test.txt");
+		File file = new File();
+		file.setId("test");
+		file.setTitle("test.txt");
+
+		FileList filelist = new FileList();
+		java.util.List<File> list = new java.util.ArrayList<File>();
+		list.add(file);
+		filelist.setItems(list);
+
+		Files files = mock(Files.class);
+		Files.Update update = mock(Files.Update.class);
+		List request = mock(List.class);
+		when(localFile.getName()).thenReturn("test.txt");
+		when(mockedDrive.files()).thenReturn(files);
+		when(files.list()).thenReturn(request);
+		when(request.execute()).thenReturn(filelist);
+		when(files.update(Mockito.any(String.class), Mockito.any(File.class), Mockito.any(FileContent.class)))
+				.thenReturn(update);
+		when(update.execute()).thenThrow(new IOException());
+
+		fileSyncManager.updateFile(localFile);
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testUpdateFileWithNullId() throws IOException {
+		java.io.File localFile = new java.io.File("C://test.txt");
+		File file = new File();
+		file.setId("test");
+		file.setTitle("test.txt");
+
+		FileList filelist = new FileList();
+		java.util.List<File> list = new java.util.ArrayList<File>();
+		list.add(file);
+		filelist.setItems(list);
+
+		Files files = mock(Files.class);
+		Files.Update update = mock(Files.Update.class);
+		List request = mock(List.class);
+		// when(localFile.getName()).thenReturn("test.txt");
+		when(mockedDrive.files()).thenReturn(files);
+		when(files.list()).thenReturn(request);
+		when(request.execute()).thenReturn(filelist);
+		when(files.update(Mockito.any(String.class), Mockito.any(File.class), Mockito.any(FileContent.class)))
+				.thenReturn(update);
+		when(update.execute()).thenThrow(NullPointerException.class);
+
+		fileSyncManager.updateFile(localFile);
+
+		verify(update).execute();
+		// assertEquals("File ID: test", outContent.toString().trim());
+	}
+
 	@Test
 	public void testDeleteFile() throws IOException {
 		java.io.File localFile = new java.io.File("C://test.txt");
@@ -186,7 +241,31 @@ public class GoogleDriveFileSyncManagerTest {
 		when(request.execute()).thenReturn(filelist);
 		when(mockedDrive.files()).thenReturn(files);
 		when(files.delete(Mockito.any(String.class))).thenReturn(delete);
-		// when(delete.execute()).thenReturn(null);
+		fileSyncManager.deleteFile(localFile);
+
+		verify(delete).execute();
+
+	}
+
+	@Test(expected = IOException.class)
+	public void testDeleteFileWithException() throws IOException {
+		java.io.File localFile = new java.io.File("C://test.txt");
+		File file = new File();
+		file.setId("test");
+		file.setTitle("test.txt");
+
+		FileList filelist = new FileList();
+		java.util.List<File> list = new java.util.ArrayList<File>();
+		list.add(file);
+		filelist.setItems(list);
+		List request = mock(List.class);
+		Files files = mock(Files.class);
+		Files.Delete delete = mock(Files.Delete.class);
+		when(files.list()).thenReturn(request);
+		when(request.execute()).thenReturn(filelist);
+		when(mockedDrive.files()).thenReturn(files);
+		when(files.delete(Mockito.any(String.class))).thenReturn(delete);
+		when(delete.execute()).thenThrow(new IOException());
 		fileSyncManager.deleteFile(localFile);
 
 		verify(delete).execute();

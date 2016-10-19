@@ -15,7 +15,7 @@ import edu.csupomona.cs585.ibox.sync.GoogleDriveServiceProvider;
 
 public class GoogleDriveFileSyncManagerIntegrationTest {
 
-	private ByteArrayOutputStream outContent;
+/*	private ByteArrayOutputStream outContent;
 
 	GoogleDriveFileSyncManager driveFileSyncManager = new GoogleDriveFileSyncManager(
 			GoogleDriveServiceProvider.get().getGoogleDriveClient());
@@ -59,6 +59,6 @@ public class GoogleDriveFileSyncManagerIntegrationTest {
 	public void testUpdateFile() throws IOException {
 		java.io.File localFile = new java.io.File("C://s.txt");
 		driveFileSyncManager.updateFile(localFile);
-	}
+	}*/
 
 }
