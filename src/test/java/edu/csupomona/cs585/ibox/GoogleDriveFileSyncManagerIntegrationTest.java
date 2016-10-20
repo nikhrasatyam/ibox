@@ -23,8 +23,6 @@ public class GoogleDriveFileSyncManagerIntegrationTest {
 	@Before
 	public void setup() {
 
-		// fileSyncManager = new GoogleDriveFileSyncManager(drive);
-		// driveServiceProvider=new GoogleDriveServiceProvider(drive);
 		outContent = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(outContent));
 
